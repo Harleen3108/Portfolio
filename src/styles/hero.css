@@ -371,6 +371,9 @@
     font-size: 2.5rem;
     top: 20vh;
     width: 200%;
+    max-width: none;
+    left: 0;
+    overflow: hidden;
   }
 
   .animated-text h1 {
@@ -424,15 +427,14 @@
 
   /* Mobile performance optimizations */
   .canvas-container {
-    will-change: opacity;
+    will-change: transform;
     overflow: hidden;
-    transform: translate3d(0, 0, 0);
-    -webkit-transform: translate3d(0, 0, 0);
   }
 
   .three-d-canvas {
-    image-rendering: optimizeSpeed;
-    image-rendering: -webkit-optimize-contrast;
+    image-rendering: auto; /* Let browser decide best quality */
+    transform: translateZ(0);
+    will-change: transform, opacity;
   }
 }
 

@@ -26,7 +26,7 @@ function ThreeDModel() {
   // Easing function for smoother progress
   const easeInOutQuad = (t) => (t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t);
 
-  // Preload images - FULL QUALITY ON MOBILE
+  // Preload images - FULL QUALITY & FULL SIZE ON MOBILE
   useEffect(() => {
     const totalFrames = 79; // FULL frames on both mobile and desktop
 
@@ -69,13 +69,14 @@ function ThreeDModel() {
 
         img.onerror = () => {
           console.warn(`Failed to load frame ${index}, using placeholder`);
-          const placeholder = createPlaceholder(800, 600, index);
+          // Use original size placeholders
+          const placeholder = createPlaceholder(1200, 800, index);
           loadedImages[index - 1] = placeholder;
           setLoadingProgress(Math.floor((index / totalFrames) * 100));
           resolve(false);
         };
 
-        // ALWAYS use original high-quality frames
+        // ALWAYS use original high-quality, full-size frames
         img.src = `/video-frames/frame_${String(frameNumber).padStart(
           4,
           "0"
@@ -89,25 +90,13 @@ function ThreeDModel() {
       setLoadingProgress(0);
 
       try {
-        // Load in small batches for mobile to prevent freezing
-        const batchSize = isMobile ? 10 : 20;
-
-        for (let i = 1; i <= totalFrames; i += batchSize) {
-          const batchPromises = [];
-          const end = Math.min(i + batchSize - 1, totalFrames);
-
-          for (let j = i; j <= end; j++) {
-            batchPromises.push(loadImage(j));
-          }
-
-          await Promise.all(batchPromises);
-
-          // Small delay on mobile to keep UI responsive
-          if (isMobile) {
-            await new Promise((resolve) => setTimeout(resolve, 50));
-          }
+        // Load all frames at once for full quality
+        const loadPromises = [];
+        for (let i = 1; i <= totalFrames; i++) {
+          loadPromises.push(loadImage(i));
         }
 
+        await Promise.all(loadPromises);
         setImages(loadedImages.filter((img) => img !== undefined));
         setIsLoading(false);
         setLoadingProgress(100);
@@ -121,21 +110,17 @@ function ThreeDModel() {
     loadAllImages();
   }, [isMobile]);
 
-  // Setup canvas - OPTIMIZED BUT HIGH QUALITY
+  // Setup canvas - FULL SIZE RENDERING ON MOBILE
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || images.length === 0) return;
 
     const ctx = canvas.getContext("2d");
     let animationFrameId;
-    let lastScrollTime = 0;
-    const scrollThrottle = isMobile ? 32 : 16; // 30fps mobile, 60fps desktop
 
     const setCanvasSize = () => {
-      // Use proper DPR but limit for mobile performance
-      const dpr = isMobile
-        ? Math.min(1.5, window.devicePixelRatio || 1)
-        : window.devicePixelRatio || 1;
+      // Use FULL DPR for maximum quality on mobile
+      const dpr = window.devicePixelRatio || 1;
       canvas.width = window.innerWidth * dpr;
       canvas.height = window.innerHeight * dpr;
       canvas.style.width = window.innerWidth + "px";
@@ -167,33 +152,30 @@ function ThreeDModel() {
 
       let width, height, x, y;
 
-      // HIGH QUALITY RENDERING - SAME FOR BOTH
+      // FULL SIZE RENDERING - SAME FOR BOTH MOBILE AND DESKTOP
+      // Use cover behavior to fill entire screen with model
       if (imgRatio > canvasRatio) {
-        width = window.innerWidth;
-        height = width / imgRatio;
-        x = 0;
-        y = (window.innerHeight - height) / 2;
-      } else {
+        // Image is wider than screen - fit to height
         height = window.innerHeight;
         width = height * imgRatio;
         x = (window.innerWidth - width) / 2;
         y = 0;
+      } else {
+        // Image is taller than screen - fit to width
+        width = window.innerWidth;
+        height = width / imgRatio;
+        x = 0;
+        y = (window.innerHeight - height) / 2;
       }
 
-      // BALANCE: Good quality but not max (for mobile performance)
+      // MAXIMUM QUALITY on both mobile and desktop
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = isMobile ? "medium" : "high";
+      ctx.imageSmoothingQuality = "high";
 
       ctx.drawImage(img, x, y, width, height);
     };
 
     const handleScroll = () => {
-      const currentTime = Date.now();
-      if (currentTime - lastScrollTime < scrollThrottle) {
-        return; // Throttle scroll events
-      }
-      lastScrollTime = currentTime;
-
       const scrollTop =
         window.pageYOffset || document.documentElement.scrollTop;
       const heroSection = document.getElementById("hero");
@@ -231,7 +213,7 @@ function ThreeDModel() {
         const frameIndex = progress * (images.length - 1);
         setCurrentFrame(frameIndex);
 
-        // Use requestAnimationFrame for smooth rendering
+        // Smooth rendering
         if (animationFrameId) {
           cancelAnimationFrame(animationFrameId);
         }
@@ -256,7 +238,7 @@ function ThreeDModel() {
         cancelAnimationFrame(animationFrameId);
       }
     };
-  }, [images, isMobile]);
+  }, [images]);
 
   return (
     <div className="canvas-container">
@@ -276,8 +258,8 @@ function ThreeDModel() {
             </div>
             <div className="loading-info">
               {isMobile
-                ? "📱 Mobile - Full Quality"
-                : "💻 Desktop - Ultra Quality"}
+                ? "📱 Mobile - Full Size & Quality"
+                : "💻 Desktop - Full Size & Quality"}
             </div>
           </div>
         </div>
