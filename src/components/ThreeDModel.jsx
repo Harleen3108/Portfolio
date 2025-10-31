@@ -85,7 +85,6 @@ function ThreeDModel() {
       try {
         const immediateFrames = isMobile ? 15 : 25;
 
-        // Load first batch for instant display
         const immediatePromises = [];
         for (let i = 1; i <= immediateFrames; i++) {
           immediatePromises.push(loadImage(i));
@@ -93,7 +92,6 @@ function ThreeDModel() {
 
         await Promise.all(immediatePromises);
 
-        // Show content immediately in hero section
         if (immediateFrames > 10) {
           setImages(
             loadedImages.slice(0, immediateFrames).filter((img) => img)
@@ -101,7 +99,6 @@ function ThreeDModel() {
           setCanvasOpacity(1);
         }
 
-        // Load remaining frames in background
         const remainingPromises = [];
         for (let i = immediateFrames + 1; i <= totalFrames; i++) {
           remainingPromises.push(loadImage(i));
@@ -273,22 +270,18 @@ function ThreeDModel() {
   return (
     <div className="canvas-container">
       {isLoading && (
-        <div className="loading-overlay">
-          <div className="loading-circle-container">
-            {/* Circular Progress */}
-            <div className="loading-circle">
-              <div className="circle-background"></div>
-              <div
-                className="circle-progress"
-                style={{
-                  background: `conic-gradient(
-                    var(--accent-secondary) ${loadingProgress * 3.6}deg,
-                    transparent ${loadingProgress * 3.6}deg
-                  )`,
-                }}
-              ></div>
-              <div className="percentage-text">{loadingProgress}%</div>
-            </div>
+        <div className="loading-circle-container">
+          <div className="loading-circle">
+            <div
+              className="circle-progress"
+              style={{
+                background: `conic-gradient(
+                  var(--accent-secondary) ${loadingProgress * 3.6}deg,
+                  transparent ${loadingProgress * 3.6}deg
+                )`,
+              }}
+            ></div>
+            <div className="percentage-text">{loadingProgress}%</div>
           </div>
         </div>
       )}
