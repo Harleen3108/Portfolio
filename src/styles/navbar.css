@@ -1,0 +1,337 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  padding: 25px 0;
+  background: transparent;
+  backdrop-filter: blur(0px);
+}
+
+.navbar.scrolled {
+  background: rgba(15, 20, 25, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+  padding: 20px 0;
+  box-shadow: var(--shadow-soft);
+}
+
+.navbar-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Professional Logo */
+.logo {
+  font-family: "Sora", sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  transition: color 0.3s ease;
+}
+
+.logo b {
+  font-weight: 700;
+  background: linear-gradient(
+    135deg,
+    var(--accent-tertiary),
+    var(--accent-secondary)
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Desktop Navigation Menu */
+.nav-menu {
+  display: flex;
+  list-style: none;
+  gap: 35px;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-menu li a {
+  font-family: "Inter", sans-serif;
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  position: relative;
+  padding: 8px 0;
+}
+
+.nav-menu li a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--gradient-primary);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.nav-menu li a:hover {
+  color: var(--text-primary);
+}
+
+.nav-menu li a:hover::after {
+  width: 100%;
+}
+
+/* Active state for navigation links */
+.nav-menu li a.active {
+  color: var(--accent-secondary);
+}
+
+.nav-menu li a.active::after {
+  width: 100%;
+  background: var(--accent-secondary);
+}
+
+/* Mobile active state */
+.mobile-nav-menu li a.active {
+  color: var(--accent-secondary);
+  background: var(--bg-secondary);
+  font-weight: 600;
+}
+
+/* Hover effects remain the same */
+.nav-menu li a:hover {
+  color: var(--text-primary);
+}
+
+.nav-menu li a:hover::after {
+  width: 100%;
+}
+
+.mobile-nav-menu li a:hover {
+  background: var(--bg-secondary);
+  color: var(--accent-secondary);
+}
+
+/* Date Button */
+.date-btn {
+  font-family: "Inter", sans-serif;
+  padding: 12px 24px;
+  background: var(--gradient-subtle);
+  color: var(--accent-tertiary);
+  border: 1px solid var(--border-light);
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(10px);
+}
+
+.date-btn:hover {
+  background: var(--gradient-primary);
+  color: white;
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+}
+
+/* Mobile Menu Button */
+.mobile-menu-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 24px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  width: 40px;
+  height: 40px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-menu-btn:hover {
+  background: var(--bg-secondary);
+}
+
+/* Mobile Menu Overlay */
+.mobile-menu-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-primary);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobile-nav-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+}
+
+.mobile-nav-menu li a {
+  font-family: "Inter", sans-serif;
+  color: var(--text-primary);
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  display: block;
+  text-align: center;
+}
+
+.mobile-nav-menu li a:hover {
+  background: var(--bg-secondary);
+  color: var(--accent-secondary);
+}
+
+.mobile-close-btn {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 28px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobile-close-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.mobile-date-btn {
+  font-family: "Inter", sans-serif;
+  padding: 14px 28px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 15px;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.mobile-date-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .navbar-container {
+    padding: 0 30px;
+  }
+
+  .nav-menu {
+    gap: 25px;
+  }
+
+  .nav-menu li a {
+    font-size: 14px;
+  }
+
+  .logo {
+    font-size: 22px;
+  }
+
+  .date-btn {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 0 20px;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+
+  .date-btn {
+    display: none;
+  }
+
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  .navbar.scrolled {
+    padding: 15px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-container {
+    padding: 0 15px;
+  }
+
+  .logo {
+    font-size: 20px;
+  }
+
+  .mobile-menu-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 20px;
+  }
+
+  .mobile-close-btn {
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    font-size: 24px;
+  }
+
+  .mobile-nav-menu li a {
+    font-size: 16px;
+    padding: 8px 16px;
+  }
+}
