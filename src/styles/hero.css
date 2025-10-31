@@ -371,9 +371,6 @@
     font-size: 2.5rem;
     top: 20vh;
     width: 200%;
-    max-width: none;
-    left: 0;
-    overflow: hidden;
   }
 
   .animated-text h1 {
@@ -427,21 +424,56 @@
 
   /* Mobile performance optimizations */
   .canvas-container {
-    will-change: transform;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
     overflow: hidden;
   }
 
   .three-d-canvas {
-    image-rendering: auto; /* Let browser decide best quality */
-    transform: translateZ(0);
-    will-change: transform, opacity;
+    transition: opacity 0.3s ease-in-out; /* Smooth fade out */
+  }
+  .about,
+  .skills,
+  .projects,
+  .experience,
+  .education,
+  .contact {
+    position: relative;
+    z-index: 2; /* Above the canvas */
+    background: var(--bg-secondary); /* Solid background */
+  }
+  .about,
+  .experience,
+  .education {
+    background: var(--bg-primary) !important;
+  }
+
+  .skills,
+  .projects,
+  .contact {
+    background: var(--bg-secondary) !important;
+  }
+
+  /* Ensure no gaps between sections */
+  section {
+    position: relative;
+    z-index: 2;
   }
 }
 
 /* Small Mobile Devices */
 @media (max-width: 480px) {
   .hero {
-    height: 110vh;
+    position: relative;
+    z-index: 1; /* Below the canvas but above other sections */
+  }
+  .loading-overlay {
+    z-index: 1000;
   }
 
   .hero-content {
