@@ -1,7 +1,6 @@
-/* Hero Section - Professional Business Style */
 .hero {
   position: relative;
-  height: 150vh; /* INCREASED from 100vh to 150vh for longer scroll animation */
+  height: 150vh;
   width: 100%;
   background: #000000;
   overflow: hidden;
@@ -10,95 +9,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  max-width: 100vw; /* CRITICAL: Prevent overflow */
+  max-width: 100vw;
 }
 
-.loading-info {
-  margin-top: 10px;
-  font-size: 12px;
-  color: var(--accent-tertiary);
-  font-weight: 600;
-}
-/* Add these optimizations to your existing hero.css */
-
-.three-d-canvas {
-  image-rendering: -webkit-optimize-contrast;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
-  transform: translateZ(0); /* GPU acceleration */
-  will-change: opacity; /* Performance hint */
-}
-
-.loading-info {
-  margin-top: 8px;
-  font-size: 11px;
-  color: var(--accent-tertiary);
-  font-weight: 500;
-  text-align: center;
-}
-
-/* Mobile performance optimizations */
-@media (max-width: 768px) {
-  .canvas-container {
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000;
-    -webkit-backface-visibility: hidden;
-    -webkit-perspective: 1000;
-  }
-
-  .three-d-canvas {
-    image-rendering: optimizeSpeed; /* Legacy */
-    image-rendering: -moz-crisp-edges;
-    image-rendering: -o-crisp-edges;
-    image-rendering: -webkit-optimize-contrast;
-    image-rendering: optimize-contrast;
-    -ms-interpolation-mode: nearest-neighbor;
-  }
-
-  .loading-overlay {
-    padding: 1.5rem 1rem;
-    width: 90%;
-    max-width: 280px;
-  }
-
-  .loading-text {
-    font-size: 0.9rem;
-    margin-bottom: 0.8rem;
-  }
-
-  .loading-bar {
-    width: 100%;
-    max-width: 200px;
-    height: 4px;
-  }
-}
-
-/* Low-end device optimizations */
-@media (max-width: 768px) and (max-resolution: 1.5dppx) {
-  .three-d-canvas {
-    image-rendering: pixelated;
-  }
-}
-
-/* Reduce motion for users who prefer it */
-@media (prefers-reduced-motion: reduce) {
-  .three-d-canvas {
-    transition: none !important;
-  }
-}
-
-.loading-overlay {
-  padding: 2rem 1.5rem;
-  width: 90%;
-  max-width: 300px;
-}
-
-.loading-text {
-  font-size: 1rem;
-}
-
-/* Canvas Container - Fixed to viewport but only visible in hero */
+/* Canvas Container - Fixed to viewport */
 .canvas-container {
   position: fixed;
   top: 0;
@@ -107,10 +21,16 @@
   height: 100vh;
   z-index: 1;
   pointer-events: none;
-  overflow: hidden; /* CRITICAL */
+  overflow: hidden;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000;
+  -webkit-backface-visibility: hidden;
+  -webkit-perspective: 1000;
+  will-change: transform;
 }
 
-/* Canvas with transition for smooth fade out */
+/* Canvas with GPU acceleration */
 .three-d-canvas {
   position: absolute;
   top: 0;
@@ -120,6 +40,11 @@
   display: block;
   background: #000000;
   transition: opacity 0.5s ease-in-out;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+  will-change: transform, opacity;
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 /* Hero Content - Above Canvas */
@@ -135,11 +60,11 @@
   padding: 0 60px;
   background: transparent;
   pointer-events: none;
-  max-width: 100vw; /* CRITICAL */
-  overflow: hidden; /* CRITICAL */
+  max-width: 100vw;
+  overflow: hidden;
 }
 
-/* Original Animated Text - Horizontal Scrolling */
+/* Animated Text - Horizontal Scrolling */
 .animated-text {
   display: flex;
   position: absolute;
@@ -147,11 +72,11 @@
   width: 200%;
   font-size: 5rem;
   white-space: nowrap;
-  overflow: hidden; /* CRITICAL: Keep text contained */
+  overflow: hidden;
   z-index: 11;
   background: transparent;
   font-family: inherit;
-  left: 0; /* CRITICAL: Start from left edge */
+  left: 0;
 }
 
 .animated-text h1 {
@@ -304,6 +229,14 @@
   animation: shimmer 1.5s infinite;
 }
 
+.loading-info {
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--accent-tertiary);
+  font-weight: 600;
+  text-align: center;
+}
+
 @keyframes shimmer {
   0%,
   100% {
@@ -339,20 +272,7 @@
   border-color: rgba(102, 252, 241, 0.6);
 }
 
-/* Global Styles for Hero Section */
-body {
-  min-height: 300vh;
-  background: transparent;
-  margin: 0;
-  padding: 0;
-}
-
-html {
-  scroll-behavior: smooth;
-  background: transparent;
-}
-
-/* Ensure other sections have proper backgrounds */
+/* Section Backgrounds */
 .about {
   background-color: var(--bg-secondary) !important;
   position: relative;
@@ -392,7 +312,7 @@ html {
 /* Responsive Design */
 @media (max-width: 1200px) {
   .hero {
-    height: 140vh; /* Slightly shorter on tablets */
+    height: 140vh;
   }
 
   .hero-content {
@@ -416,7 +336,7 @@ html {
   .animated-text {
     font-size: 3rem;
     top: 25%;
-    width: 250%; /* Adjusted for medium screens */
+    width: 250%;
   }
 
   .hero-subtitle {
@@ -430,32 +350,27 @@ html {
   }
 }
 
-/* MOBILE FIXES - Critical Changes */
+/* Mobile Optimizations */
 @media (max-width: 768px) {
-  /* Hero section height adjustment for mobile */
   .hero {
-    min-height: 120vh; /* Taller for mobile scroll */
+    min-height: 120vh;
     height: 120vh;
-    max-width: 100vw !important; /* CRITICAL */
-    overflow-x: hidden !important; /* CRITICAL */
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
 
   .hero-content {
     padding: 0 20px;
     justify-content: flex-start;
     padding-top: 25vh;
-    max-width: 100vw; /* CRITICAL */
-    overflow-x: hidden; /* CRITICAL */
+    max-width: 100vw;
+    overflow-x: hidden;
   }
 
-  /* Animated text - CONTAINED within viewport */
   .animated-text {
     font-size: 2.5rem;
     top: 20vh;
-    width: 200%; /* Reduced from 300% */
-    max-width: none;
-    left: 0;
-    overflow: hidden; /* CRITICAL */
+    width: 200%;
   }
 
   .animated-text h1 {
@@ -463,12 +378,10 @@ html {
     animation: scroll 20s linear infinite;
   }
 
-  /* Better subtitle positioning */
   .hero-subtitle {
     font-size: 0.95rem;
     top: auto;
     bottom: 30vh;
-    padding: 0;
     max-width: 90%;
     line-height: 1.6;
   }
@@ -481,7 +394,6 @@ html {
     letter-spacing: 2px;
   }
 
-  /* Loading overlay mobile */
   .loading-overlay {
     padding: 2rem 1.5rem;
     width: 85%;
@@ -498,21 +410,29 @@ html {
     margin-bottom: 1rem;
   }
 
+  .loading-info {
+    font-size: 11px;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
   .scroll-indicator {
     font-size: 0.75rem;
     bottom: 1.5rem;
     padding: 0.6rem 1.2rem;
   }
 
-  /* Canvas optimization for mobile */
+  /* Mobile performance optimizations */
   .canvas-container {
     will-change: opacity;
-    overflow: hidden; /* CRITICAL */
+    overflow: hidden;
+    transform: translate3d(0, 0, 0);
+    -webkit-transform: translate3d(0, 0, 0);
   }
 
   .three-d-canvas {
+    image-rendering: optimizeSpeed;
     image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
   }
 }
 
@@ -530,7 +450,7 @@ html {
   .animated-text {
     font-size: 2rem;
     top: 15vh;
-    width: 180%; /* Further reduced */
+    width: 180%;
   }
 
   .animated-text h1 {
@@ -550,13 +470,21 @@ html {
     letter-spacing: 1.5px;
   }
 
+  .loading-overlay {
+    padding: 1.5rem 1rem;
+    width: 90%;
+    max-width: 280px;
+  }
+
   .loading-bar {
     width: 100%;
     max-width: 200px;
+    height: 4px;
   }
 
   .loading-text {
     font-size: 0.9rem;
+    margin-bottom: 0.8rem;
   }
 }
 
@@ -564,7 +492,7 @@ html {
 @media (max-width: 375px) {
   .animated-text {
     font-size: 1.75rem;
-    width: 160%; /* Even more contained */
+    width: 160%;
   }
 
   .hero-subtitle {
@@ -599,5 +527,24 @@ html {
 
   .scroll-hint {
     bottom: 10vh;
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .three-d-canvas {
+    transition: none !important;
+  }
+
+  .animated-text h1 {
+    animation: none;
+  }
+
+  .scroll-hint::after {
+    animation: none;
+  }
+
+  .loading-progress::after {
+    animation: none;
   }
 }
