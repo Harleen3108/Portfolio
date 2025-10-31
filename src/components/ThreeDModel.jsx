@@ -7,7 +7,7 @@ function ThreeDModel() {
   const [currentFrame, setCurrentFrame] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [canvasOpacity, setCanvasOpacity] = useState(0); // Start hidden
+  const [canvasOpacity, setCanvasOpacity] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isInHero, setIsInHero] = useState(true);
@@ -98,7 +98,7 @@ function ThreeDModel() {
           setImages(
             loadedImages.slice(0, immediateFrames).filter((img) => img)
           );
-          setCanvasOpacity(1); // Make visible only when we have frames
+          setCanvasOpacity(1);
         }
 
         // Load remaining frames in background
@@ -202,9 +202,8 @@ function ThreeDModel() {
       const heroTop = heroSection.offsetTop;
       const aboutTop = aboutSection.offsetTop;
 
-      // CRITICAL: Only show model in hero section
-      const fadeStart = heroTop + heroHeight * 0.3; // Start fading earlier
-      const fadeEnd = aboutTop; // Completely hide when reaching about section
+      const fadeStart = heroTop + heroHeight * 0.3;
+      const fadeEnd = aboutTop;
 
       let opacity = 1;
 
@@ -215,7 +214,6 @@ function ThreeDModel() {
         );
       }
 
-      // COMPLETELY HIDE when past hero section
       if (scrollTop >= aboutTop) {
         opacity = 0;
         setIsInHero(false);
@@ -225,7 +223,6 @@ function ThreeDModel() {
 
       setCanvasOpacity(opacity);
 
-      // Only animate frames when in hero section
       if (scrollTop < aboutTop) {
         const maxScroll = Math.max(0, aboutTop - heroTop);
         let progress = 0;
@@ -247,7 +244,6 @@ function ThreeDModel() {
           renderFrame(frameIndex);
         });
       } else {
-        // Stop rendering when not in hero section
         if (animationFrameId) {
           cancelAnimationFrame(animationFrameId);
           animationFrameId = null;
@@ -261,7 +257,6 @@ function ThreeDModel() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", setCanvasSize);
 
-    // Initial render only if in hero
     if (isInHero) {
       renderFrame(0);
     }
@@ -279,22 +274,20 @@ function ThreeDModel() {
     <div className="canvas-container">
       {isLoading && (
         <div className="loading-overlay">
-          <div className="loading-content">
-            <div className="loading-text">
-              Loading 3D Experience... {loadingProgress}%
-            </div>
-            <div className="loading-bar">
+          <div className="loading-circle-container">
+            {/* Circular Progress */}
+            <div className="loading-circle">
+              <div className="circle-background"></div>
               <div
-                className="loading-progress"
+                className="circle-progress"
                 style={{
-                  width: `${loadingProgress}%`,
+                  background: `conic-gradient(
+                    var(--accent-secondary) ${loadingProgress * 3.6}deg,
+                    transparent ${loadingProgress * 3.6}deg
+                  )`,
                 }}
               ></div>
-            </div>
-            <div className="loading-info">
-              {isMobile
-                ? "📱 Mobile - Hero Section Only"
-                : "💻 Desktop - Hero Section Only"}
+              <div className="percentage-text">{loadingProgress}%</div>
             </div>
           </div>
         </div>
@@ -311,7 +304,7 @@ function ThreeDModel() {
         className="three-d-canvas"
         style={{
           opacity: canvasOpacity,
-          display: isInHero ? "block" : "none", // Completely hide when not in hero
+          display: isInHero ? "block" : "none",
         }}
       />
     </div>
